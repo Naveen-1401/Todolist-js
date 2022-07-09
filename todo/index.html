@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+    <style>
+        .striked{
+            text-decoration:line-through;
+        }
+    </style>
+   
+</head>
+
+<body>
+   
+    <input type="text" id="todo" placeholder="add todo list here">
+    <button onclick="addTodo()">Add</button>
+
+    <div id="todo_list">
+        <!-- <p class = "striked">Task1 <a href = "#">Delete</a></p> -->
+    </div>
+
+    <script type="text/javascript">
+        var tasks = [];
+        var editid=0;
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id != id);
+            // tasks = tasks.filter(function(t) {
+            //     return t.id != id;
+            // })
+            showTodos();
+        }
+        function editTask(id){
+                task = tasks.filter(t => t.id===id);
+                console.log(task);
+                document.getElementById('todo').value=task[0].todo;
+                editid=id;
+                
+
+
+        }
+        function saveTask(){
+            tasks[editid-1].todo = document.getElementById('todo').value;
+            showTodos();
+
+        }
+
+        function doneTodo(id) {
+            // alert('ss');
+            tasks = tasks.map(t => {
+                if(t.id === id) {
+                    if(t.status === 1){
+                        t.status = 0;
+                    }else {
+                        t.status = 1;
+                    }
+                }
+                return t;
+            })
+            showTodos();
+        }
+
+        function showTodos() {
+            var todo_list = document.getElementById('todo_list');
+            todo_list.innerHTML = "";
+            tasks.forEach(task => {
+                if(task.status === 0){
+                      todo_list.innerHTML += "<p><input onchange='doneTodo(" + task.id +  ")' type='checkbox'> " +
+                          task.todo +
+                          " <a href='#' onclick='deleteTask(" + task.id + ")'>Delete</a> <button href = '#' onclick='editTask(" +task.id + ")'>Edit</button> <button href = '#' onclick='saveTask()'>Save</button> </p>";
+                }else {
+                    
+                      todo_list.innerHTML += "<p class = 'striked'><input checked = 'true' onchange='doneTodo(" + task.id +  ")' type='checkbox'> " +
+                          task.todo +
+                          " <a href='#' onclick='deleteTask(" + task.id + ")'>Delete</a></p>";
+                }
+               
+            })
+        }
+
+        function addTodo() {
+            
+            var todo = document.getElementById('todo').value;
+            if(todo != ''){
+                  tasks.push({
+                  id: tasks.length + 1,
+                  todo: todo,
+                  status: 0
+                  });
+                  showTodos();
+                  document.getElementById('todo').value = "";
+            }else {
+                alert('cant have empty todo');
+            }
+          
+        }
+    </script>
+
+</body>
+
+</html>
